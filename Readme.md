@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алексей Гетманец](https://up.htmlacademy.ru/javascript/10/user/478225).
-* Наставник: `Неизвестно`.
+* Наставник: [Иван Догаев](https://htmlacademy.ru/profile/id491391).
 
 ---
 
