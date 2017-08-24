@@ -93,6 +93,7 @@ var similarAds = [];
 
 for (var i = 0; i < 8; i++) {
   var avatarNumber = i < 9 ? '0' + (i + 1) : '' + (i + 1);
+  var titleNumber = getRandomInt(0, AD_TITLES.length);
   var offerLocation = {
     x: getRandomInt(300, 900),
     y: getRandomInt(100, 500)
@@ -111,10 +112,10 @@ for (var i = 0; i < 8; i++) {
       avatar: 'img/avatars/user' + avatarNumber + '.png'
     },
     offer: {
-      title: AD_TITLES[i].title,
+      title: AD_TITLES[titleNumber].title,
       address: offerLocation.x + ', ' + offerLocation.y,
       price: getRandomInt(1000, 1000000),
-      type: AD_TITLES[i].type,
+      type: AD_TITLES[titleNumber].type,
       rooms: getRandomInt(1, 6),
       guests: getRandomInt(1, 9),
       checkin: CHECK_IN_TIMES[getRandomInt(0, CHECK_IN_TIMES.length)],
