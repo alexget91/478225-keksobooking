@@ -1,9 +1,22 @@
 'use strict';
 
 var OFFER_TYPES = {
-  'flat': 'Квартира',
-  'house': 'Дом',
-  'bungalo': 'Бунгало'
+  'bungalo': {
+    name: 'Бунгало',
+    minPrice: 0
+  },
+  'flat': {
+    name: 'Квартира',
+    minPrice: 1000
+  },
+  'house': {
+    name: 'Дом',
+    minPrice: 5000
+  },
+  'palace': {
+    name: 'Дворец',
+    minPrice: 10000
+  }
 };
 var AD_TITLES = [
   {
@@ -73,9 +86,8 @@ var createPin = function (ad, fragment, id) {
   if (typeof id !== 'undefined') {
     div.dataset.id = id;
   }
-  var divStyles = getComputedStyle(div);
-  div.style.left = ad.location.x - parseInt(divStyles.width, 10) / 2 + 'px';
-  div.style.top = ad.location.y - parseInt(divStyles.height, 10) + 'px';
+  div.style.left = ad.location.x + 'px';
+  div.style.top = ad.location.y + 'px';
   var img = document.createElement('img');
   img.className = 'rounded';
   img.width = 40;
@@ -105,7 +117,7 @@ var createPinPopup = function (ad, template, dialog) {
   dialogElement.querySelector('.lodge__title').textContent = ad.offer.title;
   dialogElement.querySelector('.lodge__address').textContent = ad.offer.address;
   dialogElement.querySelector('.lodge__price').innerHTML = ad.offer.price + '&#x20bd;/ночь';
-  dialogElement.querySelector('.lodge__type').textContent = OFFER_TYPES[ad.offer.type];
+  dialogElement.querySelector('.lodge__type').textContent = OFFER_TYPES[ad.offer.type].name;
   dialogElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + ad.offer.guests + ' гостей в ' + ad.offer.rooms + ' комнатах';
   dialogElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
   var feautersElement = dialogElement.querySelector('.lodge__features');
@@ -144,11 +156,35 @@ var closePinPopup = function () {
   document.removeEventListener('keydown', onPinPopupEscPress);
 };
 
+var changePriceToType = function (type) {
+  noticeFormPrice.min = OFFER_TYPES[type].minPrice;
+  noticeFormPrice.value = OFFER_TYPES[type].minPrice;
+};
+
+var formCheck = function (form) {
+  var fields = form.querySelectorAll('input[type="text"], input[type="number"]');
+  var formValid = true;
+
+  for (var i = 0; i < fields.length; i++) {
+    if (fields[i].checkValidity() === false) {
+      fields[i].style.borderColor = 'red';
+      if (formValid) {
+        formValid = false;
+      }
+    } else {
+      fields[i].style.borderColor = null;
+    }
+  }
+
+  return formValid;
+};
+
 var onPinPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closePinPopup();
   }
 };
+
 
 var similarAds = [];
 // Формирование массива соседних объявлений
@@ -196,12 +232,30 @@ for (i = 0; i < similarAds.length; i++) {
 }
 var pinMap = document.querySelector('.tokyo__pin-map');
 pinMap.appendChild(fragment);
+// Смещение маркеров в правильное положение с учётом их размера
+var pins = pinMap.querySelectorAll('.pin:not(.pin__main)');
+for (i = 0; i < pins.length; i++) {
+  pins[i].style.left = parseInt(pins[i].style.left, 10) - pins[i].offsetWidth / 2 + 'px';
+  pins[i].style.top = parseInt(pins[i].style.top, 10) - pins[i].offsetHeight + 'px';
+}
 
 
 var dialogPanelTemplate = document.querySelector('#lodge-template');
 var dialogPanelContent = dialogPanelTemplate.content ? dialogPanelTemplate.content : dialogPanelTemplate;
 var dialogPopup = document.querySelector('#offer-dialog');
 var dialogPopupClose = dialogPopup.querySelector('.dialog__close');
+
+var noticeForm = document.querySelector('.notice__form');
+var noticeFormTimein = noticeForm.querySelector('#timein');
+var noticeFormTimeout = noticeForm.querySelector('#timeout');
+var noticeFormType = noticeForm.querySelector('#type');
+var noticeFormPrice = noticeForm.querySelector('#price');
+var noticeFormRooms = noticeForm.querySelector('#room_number');
+var noticeFormCapacity = noticeForm.querySelector('#capacity');
+var noticeFormSubmit = noticeForm.querySelector('.notice__form .form__submit');
+
+noticeForm.reset();
+changePriceToType(noticeFormType.value);
 
 pinMap.addEventListener('click', function (evt) {
   openPinPopup(evt);
@@ -222,5 +276,31 @@ dialogPopupClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     evt.preventDefault();
     closePinPopup();
+  }
+});
+
+noticeFormTimein.addEventListener('change', function (evt) {
+  noticeFormTimeout.value = evt.target.value;
+});
+
+noticeFormTimeout.addEventListener('change', function (evt) {
+  noticeFormTimein.value = evt.target.value;
+});
+
+noticeFormType.addEventListener('change', function (evt) {
+  changePriceToType(evt.target.value);
+});
+
+noticeFormRooms.addEventListener('change', function (evt) {
+  if (evt.target.value === '2' || evt.target.value === '100') {
+    noticeFormCapacity.value = 3;
+  } else if (evt.target.value === '1') {
+    noticeFormCapacity.value = 0;
+  }
+});
+
+noticeFormSubmit.addEventListener('click', function (evt) {
+  if (!formCheck(noticeForm)) {
+    evt.preventDefault();
   }
 });
