@@ -67,10 +67,6 @@
   });
 
   dialogPopupClose.addEventListener('keydown', function (evt) {
-    /* if (evt.keyCode === ENTER_KEYCODE) {
-      evt.preventDefault();
-      closePinPopup();
-    } */
     window.util.isEnterEvent(evt, function () {
       evt.preventDefault();
       closePinPopup();
