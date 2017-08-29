@@ -24,7 +24,9 @@
     },
 
     activatePin: function (pin) {
-      pin.classList.add('pin--active');
+      if (!pin.classList.contains('pin__main')) {
+        pin.classList.add('pin--active');
+      }
     },
 
     deactivatePin: function (map) {
