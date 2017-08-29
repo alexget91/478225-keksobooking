@@ -113,6 +113,12 @@
 
     window.data = {
       OFFER_TYPES: OFFER_TYPES,
+      OFFER_LOCATION: {
+        xMin: OFFER_LOCATION_X_MIN,
+        xMax: OFFER_LOCATION_X_MAX,
+        yMin: OFFER_LOCATION_Y_MIN,
+        yMax: OFFER_LOCATION_Y_MAX
+      },
       similarAds: similarAds
     };
   }
