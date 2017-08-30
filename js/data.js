@@ -119,7 +119,10 @@
         yMin: OFFER_LOCATION_Y_MIN,
         yMax: OFFER_LOCATION_Y_MAX
       },
+      CHECK_IN_TIMES: CHECK_IN_TIMES,
+      CHECK_OUT_TIMES: CHECK_OUT_TIMES,
       similarAds: similarAds
     };
   }
+
 })();
