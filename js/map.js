@@ -6,6 +6,14 @@
   var pinMap = document.querySelector('.tokyo__pin-map');
   var fragment = document.createDocumentFragment();
 
+  var onLoadSuccess = function (similarAds) {
+    for (var i = 0; i < similarAds.length; i++) {
+      window.pin.createPin(similarAds[i], fragment, i);
+    }
+    pinMap.appendChild(fragment);
+    window.map.similarAds = similarAds;
+  };
+
   // Перемещение маркера к координатам с учётом его размера
   var pinToXY = function (pin, x, y) {
     pin.style.left = parseInt(x, 10) - Math.floor(pin.offsetWidth / 2) + 'px';
@@ -13,14 +21,11 @@
   };
 
   // Отображение соседних объектов на карте
-  for (var i = 0; i < window.data.similarAds.length; i++) {
-    window.pin.createPin(window.data.similarAds[i], fragment, i);
-  }
-  pinMap.appendChild(fragment);
+  window.backend.load(onLoadSuccess, window.backend.onLoadError);
 
   // Смещение маркеров в правильное положение с учётом их размера
   var pins = pinMap.querySelectorAll('.pin:not(.pin__main)');
-  for (i = 0; i < pins.length; i++) {
+  for (var i = 0; i < pins.length; i++) {
     pinToXY(pins[i], pins[i].style.left, pins[i].style.top);
   }
 
@@ -108,5 +113,9 @@
       noticeFormAddress.style.borderColor = 'red';
     }
   });
+
+  window.map = {
+    similarAds: []
+  };
 
 })();

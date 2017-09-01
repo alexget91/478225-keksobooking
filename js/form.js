@@ -38,10 +38,19 @@
     element.min = value;
   };
 
+  // Синхронизация минимальной цены с типом жилья при перезагрузке формы
+  var syncPriceDefault = function () {
+    noticeFormPrice.min = window.data.OFFER_TYPES[noticeFormType.value].minPrice;
+    noticeFormPrice.value = window.data.OFFER_TYPES[noticeFormType.value].minPrice;
+  };
 
-  noticeForm.reset();
-  noticeFormPrice.min = window.data.OFFER_TYPES[noticeFormType.value].minPrice;
-  noticeFormPrice.value = window.data.OFFER_TYPES[noticeFormType.value].minPrice;
+  var onSaveSuccess = function () {
+    noticeForm.reset();
+    syncPriceDefault();
+  };
+
+
+  syncPriceDefault();
 
   // Синхронизация полей времени заезда и выезда
   window.synchronizeFields(noticeFormTimein, noticeFormTimeout, window.data.CHECK_IN_TIMES, window.data.CHECK_OUT_TIMES, syncValues);
@@ -71,6 +80,12 @@
     if (!formCheck(noticeForm)) {
       evt.preventDefault();
     }
+  });
+
+  // Отправка формы
+  noticeForm.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(noticeForm), onSaveSuccess, window.backend.onLoadError);
+    evt.preventDefault();
   });
 
 })();
