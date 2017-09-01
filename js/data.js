@@ -23,10 +23,10 @@
   };
   var CHECK_IN_TIMES = ['12:00', '13:00', '14:00'];
   var CHECK_OUT_TIMES = ['12:00', '13:00', '14:00'];
-  var OFFER_LOCATION_X_MIN = 300;
-  var OFFER_LOCATION_X_MAX = 900;
-  var OFFER_LOCATION_Y_MIN = 100;
-  var OFFER_LOCATION_Y_MAX = 500;
+  var OFFER_LOCATION_X_MIN = 0;
+  var OFFER_LOCATION_X_MAX = 1200;
+  var OFFER_LOCATION_Y_MIN = 200;
+  var OFFER_LOCATION_Y_MAX = 670;
 
 
   window.data = {
