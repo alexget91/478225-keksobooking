@@ -4,15 +4,7 @@
 (function () {
 
   var pinMap = document.querySelector('.tokyo__pin-map');
-  var fragment = document.createDocumentFragment();
-
-  var onLoadSuccess = function (similarAds) {
-    for (var i = 0; i < similarAds.length; i++) {
-      window.pin.createPin(similarAds[i], fragment, i);
-    }
-    pinMap.appendChild(fragment);
-    window.map.similarAds = similarAds;
-  };
+  var filterContainer = document.querySelector('.tokyo__filters-container');
 
   // Перемещение маркера к координатам с учётом его размера
   var pinToXY = function (pin, x, y) {
@@ -20,14 +12,23 @@
     pin.style.top = parseInt(y, 10) - pin.offsetHeight + 'px';
   };
 
-  // Отображение соседних объектов на карте
+  var onLoadSuccess = function (pins) {
+    window.map.allPins = pins;
+    window.map.drawPins(pins);
+    filterContainer.classList.remove('hidden');
+  };
+
+
+  filterContainer.classList.add('hidden');
+
+  // Отображение маркеров на карте
   window.backend.load(onLoadSuccess, window.backend.onLoadError);
 
   // Смещение маркеров в правильное положение с учётом их размера
   var pins = pinMap.querySelectorAll('.pin:not(.pin__main)');
-  for (var i = 0; i < pins.length; i++) {
-    pinToXY(pins[i], pins[i].style.left, pins[i].style.top);
-  }
+  pins.forEach(function (el) {
+    pinToXY(el, el.style.left, el.style.top);
+  });
 
 
   // Перетаскивание главного маркера
@@ -114,8 +115,27 @@
     }
   });
 
+
   window.map = {
-    similarAds: []
+    allPins: [],
+    drawPins: function (arrPins) {
+      var visiblePins = pinMap.querySelectorAll('.pin:not(.pin__main)');
+      var fragment = document.createDocumentFragment();
+
+      if (visiblePins.length) {
+        visiblePins.forEach(function (el) {
+          el.remove();
+        });
+      }
+
+      arrPins.forEach(function (el) {
+        var id = window.map.allPins.indexOf(el);
+        if (id !== -1) {
+          window.pin.createPin(el, fragment, id);
+        }
+      });
+      pinMap.appendChild(fragment);
+    }
   };
 
 })();
