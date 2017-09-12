@@ -9,7 +9,7 @@
     var dialogElement = dialogPanelContent.cloneNode(true);
     var dialogPopup = document.querySelector('#offer-dialog');
     var fragment = document.createDocumentFragment();
-    var ad = window.map.similarAds[id];
+    var ad = window.map.allPins[id];
 
     dialogElement.querySelector('.lodge__title').textContent = ad.offer.title;
     dialogElement.querySelector('.lodge__address').textContent = ad.offer.address;

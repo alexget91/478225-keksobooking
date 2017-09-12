@@ -21,6 +21,13 @@
       img.tabIndex = 0;
       div.appendChild(img);
       fragment.appendChild(div);
+
+      div.addEventListener('click', function (evt) {
+        window.card.openPinPopup(evt);
+      });
+      div.addEventListener('keydown', function (evt) {
+        window.util.isEnterEvent(evt, window.card.openPinPopup);
+      });
     },
 
     activatePin: function (pin) {
@@ -29,8 +36,8 @@
       }
     },
 
-    deactivatePin: function (map) {
-      var pinActive = map.querySelector('.pin--active');
+    deactivatePin: function () {
+      var pinActive = document.querySelector('.tokyo__pin-map .pin--active');
       if (pinActive) {
         pinActive.classList.remove('pin--active');
       }
