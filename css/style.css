@@ -186,6 +186,8 @@ select option:hover {
 
 .upload input {
     position: absolute;
+    left: 0;
+    top: 0;
     z-index: 2;
     opacity: 0;
     width:100%;
@@ -416,6 +418,7 @@ select option:hover {
     border: 4px transparent;
 
     background: #dadad4;
+    overflow: hidden;
 }
 
 .form__submit {
