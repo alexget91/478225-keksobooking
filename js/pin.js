@@ -1,46 +1,47 @@
 'use strict';
 
-// Модуль для отрисовки меток на карте и взаимодействия с ними
+// Конструктор меток на карте
 (function () {
 
-  window.pin = {
-    // Создаёт DOM-элемент для метки на карте
-    createPin: function (ad, fragment, id) {
+  var pinId = 0;
+
+  var Pin = function (data) {
+    this.id = pinId++;
+    this.author = data.author;
+    this.offer = data.offer;
+    this.location = data.location;
+  };
+
+  Pin.prototype = {
+    imgWidth: 40,
+    imgHeight: 40,
+
+    buildElement: function () {
       var div = document.createElement('div');
       div.className = 'pin';
-      if (typeof id !== 'undefined') {
-        div.dataset.id = id;
-      }
-      div.style.left = ad.location.x + 'px';
-      div.style.top = ad.location.y + 'px';
+      div.dataset.id = this.id;
+      div.style.left = this.location.x + 'px';
+      div.style.top = this.location.y + 'px';
       var img = document.createElement('img');
       img.className = 'rounded';
-      img.width = 40;
-      img.height = 40;
-      img.src = ad.author.avatar;
+      img.width = this.imgWidth;
+      img.height = this.imgHeight;
+      img.src = this.author.avatar;
       img.tabIndex = 0;
       div.appendChild(img);
-      fragment.appendChild(div);
 
+      var pin = this;
       div.addEventListener('click', function (evt) {
-        window.card.openPinPopup(evt);
+        window.card.open(evt, pin);
       });
       div.addEventListener('keydown', function (evt) {
-        window.util.isEnterEvent(evt, window.card.openPinPopup);
+        window.util.isEnterEvent(evt, window.card.open, pin);
       });
-    },
 
-    activatePin: function (pin) {
-      if (!pin.classList.contains('pin__main')) {
-        pin.classList.add('pin--active');
-      }
-    },
-
-    deactivatePin: function () {
-      var pinActive = document.querySelector('.tokyo__pin-map .pin--active');
-      if (pinActive) {
-        pinActive.classList.remove('pin--active');
-      }
+      return div;
     }
   };
+
+  window.Pin = Pin;
+
 })();

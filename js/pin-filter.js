@@ -48,8 +48,32 @@
     return true;
   };
 
-  var filtration = function () {
-    var pins = window.map.allPins.filter(function (pin) {
+
+  housingType.addEventListener('change', function () {
+    window.debounce(window.map.drawPins);
+  });
+
+  housingPrice.addEventListener('change', function () {
+    window.debounce(window.map.drawPins);
+  });
+
+  housingRooms.addEventListener('change', function () {
+    window.debounce(window.map.drawPins);
+  });
+
+  housingGuests.addEventListener('change', function () {
+    window.debounce(window.map.drawPins);
+  });
+
+  for (var i = 0; i < housingFeatures.length; i++) {
+    housingFeatures[i].addEventListener('change', function () {
+      window.debounce(window.map.drawPins);
+    });
+  }
+
+
+  window.pinFilter = function (pins) {
+    return pins.filter(function (pin) {
       if (filterByOneValue(pin, housingType.value, 'type')) {
         if (filterByOneValue(pin, housingRooms.value, 'rooms', true)) {
           if (filterByOneValue(pin, housingGuests.value, 'guests', true)) {
@@ -63,32 +87,6 @@
       }
       return false;
     });
-
-    window.map.drawPins(pins);
-    window.card.closePinPopup();
   };
-
-
-  housingType.addEventListener('change', function () {
-    window.debounce(filtration);
-  });
-
-  housingPrice.addEventListener('change', function () {
-    window.debounce(filtration);
-  });
-
-  housingRooms.addEventListener('change', function () {
-    window.debounce(filtration);
-  });
-
-  housingGuests.addEventListener('change', function () {
-    window.debounce(filtration);
-  });
-
-  for (var i = 0; i < housingFeatures.length; i++) {
-    housingFeatures[i].addEventListener('change', function () {
-      window.debounce(filtration);
-    });
-  }
 
 })();
