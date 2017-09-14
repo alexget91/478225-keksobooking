@@ -3,6 +3,7 @@
 // Модуль для работы с картой
 (function () {
 
+  var allPins = [];
   var pinMap = document.querySelector('.tokyo__pin-map');
   var filterContainer = document.querySelector('.tokyo__filters-container');
 
@@ -12,9 +13,11 @@
     pin.style.top = parseInt(y, 10) - pin.offsetHeight + 'px';
   };
 
-  var onLoadSuccess = function (pins) {
-    window.map.allPins = pins;
-    window.map.drawPins(pins);
+  var onLoadSuccess = function (data) {
+    allPins = data.map(function (it) {
+      return new window.Pin(it);
+    });
+    window.map.drawPins();
     filterContainer.classList.remove('hidden');
   };
 
@@ -23,13 +26,6 @@
 
   // Отображение маркеров на карте
   window.backend.load(onLoadSuccess, window.backend.onLoadError);
-
-  // Смещение маркеров в правильное положение с учётом их размера
-  var pins = pinMap.querySelectorAll('.pin:not(.pin__main)');
-  pins.forEach(function (el) {
-    pinToXY(el, el.style.left, el.style.top);
-  });
-
 
   // Перетаскивание главного маркера
 
@@ -117,24 +113,26 @@
 
 
   window.map = {
-    allPins: [],
-    drawPins: function (arrPins) {
-      var visiblePins = pinMap.querySelectorAll('.pin:not(.pin__main)');
+    drawPins: function () {
       var fragment = document.createDocumentFragment();
+      var selector = '.pin:not(.pin__main)';
 
-      if (visiblePins.length) {
-        visiblePins.forEach(function (el) {
-          el.remove();
-        });
-      }
-
-      arrPins.forEach(function (el) {
-        var id = window.map.allPins.indexOf(el);
-        if (id !== -1) {
-          window.pin.createPin(el, fragment, id);
-        }
+      pinMap.querySelectorAll(selector).forEach(function (el) {
+        el.remove();
       });
+
+      window.card.close();
+
+      window.pinFilter(allPins).forEach(function (el) {
+        fragment.appendChild(el.buildElement());
+      });
+
       pinMap.appendChild(fragment);
+
+      // Смещение маркеров в правильное положение с учётом их размера
+      pinMap.querySelectorAll(selector).forEach(function (el) {
+        pinToXY(el, el.style.left, el.style.top);
+      });
     }
   };
 

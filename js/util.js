@@ -22,9 +22,9 @@
       }
     },
     // Действие по нажатию Enter
-    isEnterEvent: function (evt, action) {
+    isEnterEvent: function (evt, action, params) {
       if (evt.keyCode === ENTER_KEYCODE) {
-        action(evt);
+        action(evt, params);
       }
     }
   };

@@ -6,6 +6,17 @@
   var dialogPopup = document.querySelector('#offer-dialog');
   var dialogPopupClose = dialogPopup.querySelector('.dialog__close');
 
+  var pinActivate = function (pin) {
+    pin.classList.add('pin--active');
+  };
+
+  var pinDeactivate = function () {
+    var pin = document.querySelector('.tokyo__pin-map .pin--active');
+    if (pin !== null) {
+      pin.classList.remove('pin--active');
+    }
+  };
+
   var popupDialogShow = function (dialog) {
     dialog.classList.remove('hidden');
   };
@@ -15,37 +26,36 @@
   };
 
   var onPinPopupEscPress = function (evt) {
-    window.util.isEscEvent(evt, window.card.closePinPopup);
+    window.util.isEscEvent(evt, window.card.close);
   };
 
 
   dialogPopupClose.addEventListener('click', function (evt) {
     evt.preventDefault();
-    window.card.closePinPopup();
+    window.card.close();
   });
 
   dialogPopupClose.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, function () {
       evt.preventDefault();
-      window.card.closePinPopup();
+      window.card.close();
     });
   });
 
 
   window.card = {
-    openPinPopup: function (evt) {
-      var pin = evt.target.tagName === 'IMG' ? evt.target.parentElement : evt.target;
-      window.pin.deactivatePin();
-      window.pin.activatePin(pin);
-      if (typeof pin.dataset.id !== 'undefined') {
-        window.showCard(pin.dataset.id);
-        popupDialogShow(dialogPopup);
-      }
+    open: function (evt, pin) {
+      var pinElement = evt.target.tagName === 'IMG' ? evt.target.parentElement : evt.target;
+      pinDeactivate();
+      pinActivate(pinElement);
+      window.showCard(pin);
+      popupDialogShow(dialogPopup);
       document.addEventListener('keydown', onPinPopupEscPress);
     },
-    closePinPopup: function () {
+
+    close: function () {
       popupDialogHide(dialogPopup);
-      window.pin.deactivatePin();
+      pinDeactivate();
       document.removeEventListener('keydown', onPinPopupEscPress);
     }
   };
