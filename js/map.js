@@ -17,7 +17,7 @@
     allPins = data.map(function (it) {
       return new window.Pin(it);
     });
-    window.map.drawPins();
+    window.map.drawPins(window.data.START_PINS_NUMBER);
     filterContainer.classList.remove('hidden');
   };
 
@@ -113,7 +113,7 @@
 
 
   window.map = {
-    drawPins: function () {
+    drawPins: function (max) {
       var fragment = document.createDocumentFragment();
       var selector = '.pin:not(.pin__main)';
 
@@ -123,7 +123,7 @@
 
       window.card.close();
 
-      window.pinFilter(allPins).forEach(function (el) {
+      window.pinFilter(allPins, max).forEach(function (el) {
         fragment.appendChild(el.buildElement());
       });
 

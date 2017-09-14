@@ -44,6 +44,15 @@
     noticeFormPrice.value = window.data.OFFER_TYPES[noticeFormType.value].minPrice;
   };
 
+  var syncWithCustomValues = function (elToRead, elToWright, wrightValues) {
+    var readValues = [];
+    var optionTags = elToRead.querySelectorAll('option');
+    for (i = 0; i < optionTags.length; i++) {
+      readValues[i] = optionTags[i].value;
+    }
+    window.synchronizeFields(elToRead, elToWright, readValues, wrightValues, syncValues);
+  };
+
   var onSaveSuccess = function () {
     noticeForm.reset();
     syncPriceDefault();
@@ -65,14 +74,11 @@
   window.synchronizeFields(noticeFormType, noticeFormPrice, offerTypes, offerMinPrices, syncValueWithMin);
   window.synchronizeFields(noticeFormType, noticeFormPrice, offerTypes, offerMinPrices, syncValues);
 
-  // Синхронизация количества комнат и количества мест
-  var offerRooms = [];
-  var roomOptionTags = noticeFormRooms.querySelectorAll('option');
-  for (i = 0; i < roomOptionTags.length; i++) {
-    offerRooms[i] = roomOptionTags[i].value;
-  }
-  var offerCapacity = [0, 3, null, 3];
-  window.synchronizeFields(noticeFormRooms, noticeFormCapacity, offerRooms, offerCapacity, syncValues);
+  // Синхронизация количества комнат с количеством мест
+  syncWithCustomValues(noticeFormRooms, noticeFormCapacity, [1, null, null, 0]);
+
+  // Синхронизация количества мест с количеством комнат
+  syncWithCustomValues(noticeFormCapacity, noticeFormRooms, [3, 2, 1, 100]);
 
 
   // Блокировка отправки формы при наличии ошибок заполнения
