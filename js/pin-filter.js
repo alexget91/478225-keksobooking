@@ -28,11 +28,11 @@
 
   var getFeaturesChecked = function () {
     featuresChecked = [];
-    for (var i = 0; i < housingFeatures.length; i++) {
-      if (housingFeatures[i].checked) {
-        featuresChecked.push(housingFeatures[i].value);
+    [].forEach.call(housingFeatures, function (el) {
+      if (el.checked) {
+        featuresChecked.push(el.value);
       }
-    }
+    });
   };
 
   var filterByOneValue = function (pin, propValue, propName, isInt) {
@@ -103,11 +103,11 @@
     window.debounce(window.map.drawPins);
   });
 
-  for (var i = 0; i < housingFeatures.length; i++) {
-    housingFeatures[i].addEventListener('change', function () {
+  [].forEach.call(housingFeatures, function (el) {
+    el.addEventListener('change', function () {
       window.debounce(window.map.drawPins);
     });
-  }
+  });
 
 
   window.pinFilter = function (allPins, max) {

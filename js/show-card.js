@@ -12,14 +12,16 @@
 
     dialogElement.querySelector('.lodge__title').textContent = pin.offer.title;
     dialogElement.querySelector('.lodge__address').textContent = pin.offer.address;
-    dialogElement.querySelector('.lodge__price').innerHTML = pin.offer.price + '&#x20bd;/ночь';
+    dialogElement.querySelector('.lodge__price .js-price').textContent = pin.offer.price;
     dialogElement.querySelector('.lodge__type').textContent = window.data.OFFER_TYPES[pin.offer.type].name;
     dialogElement.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + pin.offer.guests + ' гостей в ' + pin.offer.rooms + ' комнатах';
     dialogElement.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
     var feautersElement = dialogElement.querySelector('.lodge__features');
-    for (var i = 0; i < pin.offer.features.length; i++) {
-      feautersElement.innerHTML += '<span class="feature__image feature__image--' + pin.offer.features[i] + '"></span>';
-    }
+    pin.offer.features.forEach(function (el) {
+      var span = document.createElement('span');
+      span.setAttribute('class', 'feature__image feature__image--' + el);
+      feautersElement.appendChild(span);
+    });
     dialogElement.querySelector('.lodge__description').textContent = pin.offer.description;
 
     fragment.appendChild(dialogElement);

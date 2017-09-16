@@ -37,14 +37,10 @@
   };
 
   var checkPinCoords = function (x, y) {
-    if (x >= window.data.OFFER_LOCATION.xMin
-        && x <= window.data.OFFER_LOCATION.xMax
-        && y >= window.data.OFFER_LOCATION.yMin
-        && y <= window.data.OFFER_LOCATION.yMax) {
-      return true;
-    } else {
-      return false;
-    }
+    return x >= window.data.OFFER_LOCATION.xMin
+      && x <= window.data.OFFER_LOCATION.xMax
+      && y >= window.data.OFFER_LOCATION.yMin
+      && y <= window.data.OFFER_LOCATION.yMax;
   };
 
   var movePin = function (pin, shift) {
@@ -62,6 +58,7 @@
       setNoticeAddress(addrX, addrY);
     }
   };
+
 
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -117,8 +114,8 @@
       var fragment = document.createDocumentFragment();
       var selector = '.pin:not(.pin__main)';
 
-      pinMap.querySelectorAll(selector).forEach(function (el) {
-        el.remove();
+      [].forEach.call(pinMap.querySelectorAll(selector), function (it) {
+        it.remove();
       });
 
       window.card.close();
@@ -130,8 +127,8 @@
       pinMap.appendChild(fragment);
 
       // Смещение маркеров в правильное положение с учётом их размера
-      pinMap.querySelectorAll(selector).forEach(function (el) {
-        pinToXY(el, el.style.left, el.style.top);
+      [].forEach.call(pinMap.querySelectorAll(selector), function (it) {
+        pinToXY(it, it.style.left, it.style.top);
       });
     }
   };
