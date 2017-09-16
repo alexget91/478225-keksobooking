@@ -67,13 +67,13 @@
   // Перетаскивание загруженных картинок
 
   var showDragCells = function () {
-    dragCells.forEach(function (cell) {
+    [].forEach.call(dragCells, function (cell) {
       cell.style.outline = '2px dashed #7D7D77';
     });
   };
 
   var hideDragCells = function () {
-    dragCells.forEach(function (cell) {
+    [].forEach.call(dragCells, function (cell) {
       cell.style.outline = '';
     });
   };

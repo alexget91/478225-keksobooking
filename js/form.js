@@ -11,21 +11,24 @@
   var noticeFormRooms = noticeForm.querySelector('#room_number');
   var noticeFormCapacity = noticeForm.querySelector('#capacity');
   var noticeFormSubmit = noticeForm.querySelector('.notice__form .form__submit');
+  var noticeAvatar = document.querySelector('.notice__photo');
+  var avatarDefault = noticeAvatar.querySelector('.notice__preview img').src;
+  var photoContainer = document.querySelector('.form__photo-container');
 
   var formCheck = function (form) {
     var fields = form.querySelectorAll('input[type="text"], input[type="number"]');
     var formValid = true;
 
-    for (var i = 0; i < fields.length; i++) {
-      if (fields[i].checkValidity() === false) {
-        fields[i].style.borderColor = 'red';
+    [].forEach.call(fields, function (el) {
+      if (el.checkValidity() === false) {
+        el.style.borderColor = 'red';
         if (formValid) {
           formValid = false;
         }
       } else {
-        fields[i].style.borderColor = null;
+        el.style.borderColor = null;
       }
-    }
+    });
 
     return formValid;
   };
@@ -45,16 +48,26 @@
   };
 
   var syncWithCustomValues = function (elToRead, elToWright, wrightValues) {
-    var readValues = [];
     var optionTags = elToRead.querySelectorAll('option');
-    for (i = 0; i < optionTags.length; i++) {
-      readValues[i] = optionTags[i].value;
-    }
+    var readValues = [].map.call(optionTags, function (el) {
+      return el.value;
+    });
     window.synchronizeFields(elToRead, elToWright, readValues, wrightValues, syncValues);
+  };
+
+  var resetfileFields = function () {
+    noticeAvatar.querySelector('input[type="file"]').value = '';
+    noticeAvatar.querySelector('.notice__preview img').src = avatarDefault;
+    photoContainer.querySelector('.drop-zone input[type="file"]').value = '';
+    [].forEach.call(photoContainer.querySelectorAll('.form__photo.js-full'), function (el) {
+      el.textContent = '';
+      el.classList.remove('js-full');
+    });
   };
 
   var onSaveSuccess = function () {
     noticeForm.reset();
+    resetfileFields();
     syncPriceDefault();
   };
 
@@ -67,10 +80,9 @@
 
   // Синхронизация типа жилья и минимальной цены
   var offerTypes = Object.keys(window.data.OFFER_TYPES);
-  var offerMinPrices = [];
-  for (var i = 0; i < offerTypes.length; i++) {
-    offerMinPrices[i] = window.data.OFFER_TYPES[offerTypes[i]].minPrice;
-  }
+  var offerMinPrices = [].map.call(offerTypes, function (el) {
+    return window.data.OFFER_TYPES[el].minPrice;
+  });
   window.synchronizeFields(noticeFormType, noticeFormPrice, offerTypes, offerMinPrices, syncValueWithMin);
   window.synchronizeFields(noticeFormType, noticeFormPrice, offerTypes, offerMinPrices, syncValues);
 
